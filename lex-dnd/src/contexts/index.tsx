@@ -12,6 +12,10 @@ export const DragAndDropProvider = ({
   const [draggingElement, setDraggingElement] = useState<any | null>(null);
   const [hoveringElement, setHoveringElement] = useState<any | null>(null);
 
+  const dropAction = () => {
+    
+  }
+
   return (
     <DragAndDropContext.Provider value={{}}>
       {children}

@@ -1,0 +1,1 @@
+Um conjunto de hooks para criação de comportamentos drag and drop em React utilizando dragevents nativos.

@@ -1,53 +1,65 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 interface iUseDropZoneParams<E = any> {
   draggingElement: E;
   hoveringElement: E;
   dropType: string;
-  data: any;
-  setData: React.Dispatch<React.SetStateAction<any>>;
+  callback: () => void;
 }
 
-interface iDropZoneEvents{
-    onDragOver: (event: DragEvent) => void,
-    onDrop: () => void,
+interface iDropZoneEvents {
+  onDragOver: (event: DragEvent) => void;
+  onDrop: () => void;
+  onDragEnter: () => void;
+  onDragLeave: () => void;
 }
 
-interface iUseDropZoneReturn{
-    dropZoneEvents: iDropZoneEvents,
+interface iUseDropZoneReturn {
+  hover: boolean;
+  dropZoneEvents: iDropZoneEvents;
 }
 
-export const useDropZone = ({
+export type tUseDropZone<E = any> = (
+  params: iUseDropZoneParams<E>
+) => iUseDropZoneReturn;
+
+export const useDropZone: tUseDropZone = ({
   draggingElement,
-  hoveringElement,
   dropType,
-  data,
-  setData,
-}: iUseDropZoneParams): iUseDropZoneReturn => {
+  callback,
+}) => {
+  const [hover, setHover] = useState(false);
+
   const onDragOver = (event: DragEvent) => {
     event.preventDefault();
   };
 
+  const onDragEnter = useCallback(() => {
+    if (draggingElement.dropType === dropType) {
+      setHover(true);
+    }
+  }, [draggingElement, dropType]);
+
+  const onDragLeave = useCallback(() => {
+    if (draggingElement.dropType === dropType) {
+      setHover(false);
+    }
+  }, [draggingElement, dropType]);
+
   const onDrop = () => {
     if (draggingElement.dropType === dropType) {
-      const newData = [...data];
-
-      if (hoveringElement) {
-        newData.splice(draggingElement.index, 1);
-        newData.splice(hoveringElement.index, 0, data[draggingElement.index]);
-        setData(newData);
-      } else {
-        newData.splice(draggingElement.index, 1);
-        newData.push(data[draggingElement.index]);
-        setData(newData);
-      }
+      callback();
     }
+    setHover(false);
   };
 
   return {
+    hover,
     dropZoneEvents: {
-        onDragOver,
-        onDrop,
-    }
-  }
+      onDragOver,
+      onDrop,
+      onDragEnter,
+      onDragLeave,
+    },
+  };
 };

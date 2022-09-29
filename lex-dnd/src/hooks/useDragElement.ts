@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
-interface iUseDragParams<E = any> {
+interface iUseDragElementParams<E = any> {
   currentElement: E;
   draggingElement: E;
   setDraggingElement: React.Dispatch<React.SetStateAction<E>>;
@@ -14,31 +14,33 @@ interface iDragElementEvents {
     onDragOver: (event: DragEvent) => void;
 }
 
-interface iUseDragReturn {
+interface iUseDragElementReturn {
     dragging: boolean,
     hover: boolean,
     dragElementEvents: iDragElementEvents;
 }
 
-export const useDragElement = ({
+export type tUseDragElement<E = any> = (params: iUseDragElementParams<E>) => iUseDragElementReturn;
+
+export const useDragElement: tUseDragElement = ({
   currentElement,
   draggingElement,
   setDraggingElement,
   setHoveringElement,
   dropType,
-}: iUseDragParams): iUseDragReturn => {
+}) => {
   const [dragging, setDragging] = useState(false);
   const [hover, setHover] = useState(false);
 
-  const onDragStart = () => {
+  const onDragStart = useCallback(() => {
     setDraggingElement(currentElement);
     setDragging(true);
-  };
+  }, [currentElement, setDraggingElement]);;
 
-  const onDragEnd = () => {
+  const onDragEnd = useCallback(() => {
     setDraggingElement(null);
     setDragging(false);
-  };
+  }, [setDraggingElement]);
 
   const onDragOver = (
     event: DragEvent,
