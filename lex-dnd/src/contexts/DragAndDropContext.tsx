@@ -1,7 +1,4 @@
-import React, {
-  createContext,
-  useState,
-} from "react";
+import React, { createContext, useState } from "react";
 
 interface iDragAndDropProviderProps {
   children: React.ReactNode;
@@ -67,50 +64,21 @@ export const DragAndDropProvider = ({
     currentDropZoneIndex: number,
     newDropZoneIndex: number
   ) => {
-    if (currentDropZoneIndex === newDropZoneIndex) {
-      const newData = [...data];
-      const newDropzoneData = [...newData[newDropZoneIndex]];
+    const newData = [...data];
 
-      if (hoveringElement) {
-        newDropzoneData.splice(
+    hoveringElement
+      ? newData[newDropZoneIndex].splice(
           hoveringElement.index,
           0,
-          newDropzoneData[draggingElement.index]
+          newData[currentDropZoneIndex][draggingElement.index]
+        )
+      : newData[newDropZoneIndex].push(
+          newData[currentDropZoneIndex][draggingElement.index]
         );
-        newDropzoneData.splice(draggingElement.index, 1);
-        newData[newDropZoneIndex] = newDropzoneData;
-        setData(newData);
-      } else {
-        newDropzoneData.push(newDropzoneData[draggingElement.index]);
-        newDropzoneData.splice(draggingElement.index, 1);
-        newData[newDropZoneIndex] = newDropzoneData;
-        setData(newData);
-      }
-    } else {
-      const newData = [...data];
-      const newCurrentDropzoneData = [...newData[currentDropZoneIndex]];
-      const newNewDropzoneData = [...newData[newDropZoneIndex]];
+        
+    newData[currentDropZoneIndex].splice(draggingElement.index, 1);
 
-      if (hoveringElement) {
-        newNewDropzoneData.splice(
-          hoveringElement.index,
-          0,
-          newCurrentDropzoneData[draggingElement.index]
-        );
-        newCurrentDropzoneData.splice(draggingElement.index, 1);
-
-        newData[currentDropZoneIndex] = newCurrentDropzoneData;
-        newData[newDropZoneIndex] = newNewDropzoneData;
-        setData(newData);
-      } else {
-        newNewDropzoneData.push(newCurrentDropzoneData[draggingElement.index]);
-        newCurrentDropzoneData.splice(draggingElement.index, 1);
-
-        newData[currentDropZoneIndex] = newCurrentDropzoneData;
-        newData[newDropZoneIndex] = newNewDropzoneData;
-        setData(newData);
-      }
-    }
+    setData(newData);
   };
 
   return (
