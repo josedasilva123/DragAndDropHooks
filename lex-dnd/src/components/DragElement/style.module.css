@@ -1,0 +1,11 @@
+.taskCard{
+    padding: 20px 30px;
+    border: 2px solid black; 
+    opacity: 1;
+    transition: .4s;   
+}
+
+.taskCard.hover{
+    border-color: blue;
+    opacity: .5;
+}

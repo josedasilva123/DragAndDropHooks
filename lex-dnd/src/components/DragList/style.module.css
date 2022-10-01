@@ -1,0 +1,9 @@
+.columnList{
+    display: flex;
+    justify-content: flex-start;
+    gap: 3rem;
+}
+
+.columnList > div{
+    width: 100%;
+}

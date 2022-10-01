@@ -1,10 +1,46 @@
-import React from 'react'
+import React, { useContext } from "react";
+import { DragAndDropContext } from "../../contexts/DragAndDropContext";
+import { useDragElement } from "../../hooks/useDragElement";
+import styles from "./style.module.css";
 
-const index = () => {
-
-  return (
-    <div>index</div>
-  )
+export interface iDragElement {
+  id: string;
+  title: string;
 }
 
-export default index
+export interface iDragElementProps {
+  dragElement: iDragElement;
+  index: number;
+  dropZoneIndex: number;
+}
+
+const DragElement = ({
+  dragElement,
+  index,
+  dropZoneIndex,
+}: iDragElementProps) => {
+  const { draggingElement, setDraggingElement, hoveringElement, setHoveringElement } =
+    useContext(DragAndDropContext);
+  const { dragElementEvents, hover } = useDragElement({
+    currentElement: {
+      dropType: "teste",
+      index,
+      dropZoneIndex,
+      ...dragElement,
+    },
+    dropType: "teste",
+    draggingElement,
+    setDraggingElement,
+    hoveringElement,
+    setHoveringElement,
+  });
+  return (
+    <div draggable={true} {...dragElementEvents} >
+      <li className={`${styles.taskCard} ${hover ? styles.hover : ""}`}>
+        <h3>{dragElement.title}</h3>
+      </li>
+    </div>
+  );
+};
+
+export default DragElement;

@@ -1,4 +1,5 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import produce from "immer";
 
 interface iDragAndDropProviderProps {
   children: React.ReactNode;
@@ -17,37 +18,31 @@ export const DragAndDropContext = createContext({} as iDragAndDropContext);
 
 const mockData = [
   {
-    dropType: "teste",
     id: "column1",
     name: "Todo",
     itens: [
       {
-        dropType: "teste",
         id: "item1",
         title: "Lavar a loça",
       },
       {
-        dropType: "teste",
         id: "item2",
         title: "Fazer o almoço",
       },
     ],
   },
   {
-    dropType: "teste",
     id: "column2",
     name: "Doing",
     itens: [
       {
-        dropType: "teste",
         id: "item3",
         title: "Programar",
       },
     ],
   },
   {
-    dropType: "teste",
-    id: "column2",
+    id: "column3",
     name: "Done",
     itens: [],
   },
@@ -64,19 +59,32 @@ export const DragAndDropProvider = ({
     currentDropZoneIndex: number,
     newDropZoneIndex: number
   ) => {
-    const newData = [...data];
+    const currentElement = {
+      ...data[currentDropZoneIndex].itens[draggingElement.index],
+    };
 
-    hoveringElement
-      ? newData[newDropZoneIndex].splice(
-          hoveringElement.index,
-          0,
-          newData[currentDropZoneIndex][draggingElement.index]
-        )
-      : newData[newDropZoneIndex].push(
-          newData[currentDropZoneIndex][draggingElement.index]
-        );
-        
-    newData[currentDropZoneIndex].splice(draggingElement.index, 1);
+    function checkElementPosition() {
+      if (currentDropZoneIndex !== newDropZoneIndex) {
+        return true;
+      } else {
+        if (draggingElement.index + 1 === hoveringElement.index) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+
+    const newData = produce(data, (draft: any) => {
+      draft[currentDropZoneIndex].itens.splice(draggingElement.index, 1);
+      hoveringElement
+        ? draft[newDropZoneIndex].itens.splice(
+            hoveringElement.index,
+            0,
+            currentElement
+          )
+        : draft[newDropZoneIndex].itens.push(currentElement);
+    });
 
     setData(newData);
   };
