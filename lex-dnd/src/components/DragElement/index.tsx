@@ -34,9 +34,10 @@ const DragElement = ({
     hoveringElement,
     setHoveringElement,
   });
+  
   return (
-    <div draggable={true} {...dragElementEvents} >
-      <li className={`${styles.taskCard} ${hover ? styles.hover : ""}`}>
+    <div draggable={true} {...dragElementEvents} className={`${styles.taskCard} ${hover ? styles.hover : ""}`}>
+      <li>
         <h3>{dragElement.title}</h3>
       </li>
     </div>

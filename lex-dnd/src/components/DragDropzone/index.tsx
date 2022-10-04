@@ -16,19 +16,21 @@ interface iDragDropZoneProps {
 }
 
 const DragDropzone = ({ dropzone, index }: iDragDropZoneProps) => {
-  const { draggingElement, hoveringElement, dropAction } =
+  const { draggingElement, dropAction, hoveringDropZone, setHoveringElement } =
     useContext(DragAndDropContext);
 
   const { dropZoneEvents } = useDropZone({
     dropType: "teste",
     draggingElement,
     callback: () => dropAction(draggingElement.dropZoneIndex, index),
+    setHoveringElement,
   });
 
   return (
     <div {...dropZoneEvents} className={styles.dropzone}>
       <h2>{dropzone.name}</h2>
       <ul>
+        {dropzone.id === hoveringDropZone && <h1>Em cima</h1>}
         {dropzone.itens.map((dragElement, dragElementIndex) => (
           <DragElement
             key={dragElementIndex}

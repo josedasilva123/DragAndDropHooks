@@ -2,6 +2,7 @@ import React, { DragEventHandler, useCallback, useEffect, useState } from "react
 
 interface iUseDropZoneParams<E = any> {
   draggingElement: E;
+  setHoveringElement: React.Dispatch<React.SetStateAction<E>>;
   dropType: string;
   callback: () => void;
 }
@@ -21,8 +22,10 @@ export type tUseDropZone<E = any> = (
 
 export const useDropZone: tUseDropZone = ({
   draggingElement,
+  setHoveringElement,
   dropType,
   callback,
+ 
 }) => {
   const onDragOver: DragEventHandler<any> = (event) => {
     event.preventDefault();
@@ -31,6 +34,7 @@ export const useDropZone: tUseDropZone = ({
   const onDrop = () => {
     if (draggingElement.dropType === dropType) {
       callback();
+      setHoveringElement(null);
     }
   };
 

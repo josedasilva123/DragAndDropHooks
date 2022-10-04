@@ -10,7 +10,7 @@ interface iDragAndDropContext {
   dropAction: (currentDropZoneIndex: number, newDropZoneIndex: number) => void;
   draggingElement: any | null;
   setDraggingElement: React.Dispatch<any>;
-  hoveringElement: any | null;
+  hoveringElement: any | null; 
   setHoveringElement: React.Dispatch<any>;
 }
 
@@ -62,18 +62,6 @@ export const DragAndDropProvider = ({
     const currentElement = {
       ...data[currentDropZoneIndex].itens[draggingElement.index],
     };
-
-    function checkElementPosition() {
-      if (currentDropZoneIndex !== newDropZoneIndex) {
-        return true;
-      } else {
-        if (draggingElement.index + 1 === hoveringElement.index) {
-          return false;
-        } else {
-          return true;
-        }
-      }
-    }
 
     const newData = produce(data, (draft: any) => {
       draft[currentDropZoneIndex].itens.splice(draggingElement.index, 1);

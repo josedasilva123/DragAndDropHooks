@@ -18,7 +18,7 @@ interface iDragElementEvents {
   onDragStart: DragEventHandler<any>;
   onDragEnd: DragEventHandler<any>;
   onDragOver: DragEventHandler<any>;
-  onDrop: DragEventHandler<any>;
+  onDragLeave: DragEventHandler<any>;
 }
 
 interface iUseDragElementReturn {
@@ -60,10 +60,28 @@ export const useDragElement: tUseDragElement = ({
 
   const onDragEnd = useCallback(() => {
     setDraggingElement(null);
-    setHoveringElement(false);
+    setHoveringElement(null);
     setDragging(false);
   }, [setDraggingElement]);
 
+  const onDragOver: DragEventHandler = useCallback(
+    (event) => {
+      event.preventDefault();
+      if (
+        draggingElement.dropType === dropType &&
+        hoveringElement !== currentElement
+      ) {
+        setHoveringElement(currentElement);
+      }
+    },
+    [draggingElement, hoveringElement, currentElement, setHoveringElement]
+  );
+
+  const onDragLeave: DragEventHandler = useCallback(() => {
+    setHoveringElement(null);
+  }, [setHoveringElement]);
+
+  /*
   const onDragOver: DragEventHandler<any> = (event) => {
     if (draggingElement.dropType === dropType) {
       const target = event.currentTarget as HTMLElement;
@@ -77,10 +95,7 @@ export const useDragElement: tUseDragElement = ({
       }
     }
   };
-
-  const onDrop = () => {
-    setHoveringElement(false);
-  };
+  */
 
   return {
     hover,
@@ -89,7 +104,7 @@ export const useDragElement: tUseDragElement = ({
       onDragStart,
       onDragEnd,
       onDragOver,
-      onDrop,
+      onDragLeave,
     },
   };
 };
