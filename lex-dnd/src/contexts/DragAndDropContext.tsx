@@ -62,7 +62,7 @@ export const DragAndDropProvider = ({
     const currentElement = {
       ...data[currentDropZoneIndex].itens[draggingElement.index],
     };
-
+    
     const newData = produce(data, (draft: any) => {
       draft[currentDropZoneIndex].itens.splice(draggingElement.index, 1);
       hoveringElement
@@ -72,7 +72,8 @@ export const DragAndDropProvider = ({
             currentElement
           )
         : draft[newDropZoneIndex].itens.push(currentElement);
-    });
+    }); 
+    
 
     setData(newData);
   };
